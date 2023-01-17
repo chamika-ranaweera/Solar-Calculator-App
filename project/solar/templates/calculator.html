@@ -1,0 +1,243 @@
+{% extends 'base.html' %}
+{% block title %}
+<title>Solar Calculator</title>
+{% endblock %}
+{% block links %}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+  integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+  integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+  integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+  integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+{% endblock %}
+{% block content %}
+
+<style>
+  input::placeholder {
+    text-align: right;
+  }
+
+  input::-webkit-input-placeholder {
+    text-align: left;
+  }
+
+  div.scrollmenu {
+    background-color: rgb(255, 255, 255);
+    overflow: auto;
+    white-space: nowrap;
+  }
+
+  div.scrollmenu a {
+    display: inline-block;
+    color: white;
+    text-align: center;
+    padding: 14px;
+    text-decoration: none;
+  }
+
+  div.scrollmenu a:hover {
+    background-color: #777;
+  }
+
+  .button4 {
+    border-radius: 12px;
+  }
+</style>
+<div class="container">
+  <h2><strong>Off-Grid Solar Calculator</strong></h2>
+  <h3><strong>01.Enter the Appliances</h3>
+
+  <p>First you have to start by listing your home appliances in the table. Name your device and include the power rating
+    (watts) of the each device with the hours of intended use. </strong></p>
+  <div class="scrollmenu">
+
+    <table id="tblDay" border="1" cellspacing="2">
+      
+        <tr>
+          <th style="width:150px; text-align:center ;">Device</th>
+          <th style="width:150px; text-align:center ;">Watts (W)</th>
+          <th style="width:150px; text-align:center ;">Hours (h)</th>
+          <th style="width:150px; text-align:center ;">Watt Hours (Wh)</th>
+        </tr>
+        <tr>
+          <td style="width:150px;">
+            <input type="text" id="dName" value="" placeholder="Refrigerator">
+          </td>
+          <td style="width:150px;">
+            <input type="number" min="0" id="dwatt" value="" placeholder="130">
+          </td>
+          <td style="width:150px;">
+            <input type="number" min="0" id="dhour" value="" placeholder="24">
+          </td>
+          <td style="width:150px;">
+            <input type="number" min="0" id="dWh" value="" disabled="" placeholder="3120">
+          </td>
+
+        </tr>
+
+      
+    </table>
+    <br>
+    <input onclick="addTableRow()" type="button" id="addDay" value="Add device">
+    <input onclick="deleteTableRow()" type="button" id="delDay" value="Remove device">
+    <br>
+    <br>
+
+  </div>
+
+  <div class="row">
+    <div class="col-3">
+      <input onclick="getDeviceWh()" type="button" id="calDayTotalWh" value="Calculate Total W-hours">
+    </div>
+    <div class="col-4">
+      <input type="number" min="0" id="DayTotalWhOut" value="" disabled=""><span><span> Wh</span></span>
+    </div>
+  </div>
+  <br>
+  <br>
+
+
+  <h3><strong>02.Select System Voltage</h3>
+  <p>Select the battery Voltage for the System.It`s always better to select a higher system voltage as the thickness of
+    DC cables depends on it.</strong></p>
+  <ul>
+    <li>Inverters below 2000W -> 12V</li>
+    <li>Inverters 2000W to 3000W -> 24V</li>
+    <li>Inverters 3000W to 5000W -> 48V</li>
+  </ul>
+  <div>
+    <select id="voltage">
+      <option value="12"> 12 V System</option>
+      <option value="24"> 24 V System</option>
+      <option value="48"> 48 V System</option>
+    </select>
+
+  </div>
+
+  <br>
+  <br>
+  <h3><strong>03.Days of Autonomy</h3>
+  <p>If the sun isn't shining, this will serve as a backup. It is recommended to have at least 1 day of backup.The
+    battery capacity will be decided depend on the requirement.</strong></p>
+  <input type="number" min="0" id="daysOfAuto" value=""><span> Days</span>
+
+  <br>
+  <br>
+
+  <h3><strong>04.Select Degree of Discharge</h3>
+  <p>Depth of Discharge (DOD) refers to how much energy is cycled into and out of the battery on a given cycle. It's
+    expressed as a percentage of the total capacity of the battery. </strong></p>
+  <input type="number" min="0" id="degOfDischarge" value=""><span> %</span>
+
+  <br>
+  <br>
+
+  <h3><strong>05.Select Efficiency</h3>
+  <p>Inverter efficiency is the ratio of the usable AC output power to the sum of the DC input power. Typical off-grid
+    inverter efficiencies exceed 95% under most operating conditions. </strong></p>
+  <input type="number" min="0" id="efficiency" value=""><span> %</span>
+
+  <br>
+  <br>
+  <h3><strong>06.Calculate the Battery Capacity</h3>
+  <p>According to the data you entered, the calculated battery sizes are shown here. </strong></p>
+  <div class="row">
+    <div class="col-3">
+      <input onclick="calBatteryCap()" type="button" id="calbatcap" value="Calculate Battery Capacity">
+    </div>
+    <div class="col-4">
+      <input type="number" min="0" id="batCapacity" value="" disabled=""><span> Ah</span>
+    </div>
+  </div>
+
+  <br>
+  <br>
+
+  <h3><strong>07.Enter the Avg. Sun Hours Per day</h3>
+  <p>Depending on your location, you'll see a major difference in the average peak sunlight hours. </strong></p>
+  <input type="number" min="0" id="sunHours" value=""><span> hours</span>
+
+  <br>
+  <br>
+
+  <h3><strong>08.Calculate the Panel Capacity</h3>
+  <p>This gives you the amount of energy your panels need to produce every hour. </strong></p>
+  <div class="row">
+    <div class="col-3">
+      <input onclick="calPanelCap()" type="button" id="calsolpow" value="Calculate Solor Power">
+    </div>
+    <div class="col-4">
+      <input type="number" min="0" id="solorpanelcap" value="" disabled=""><span> W</span>
+    </div>
+  </div>
+
+  <br>
+  <br>
+
+</div>
+<script>
+
+  //var addRow = document.getElementById("addDay");
+
+  //addRow.addEventListener("click",addTableRow);
+  function addTableRow() {
+    let table = document.getElementById("tblDay");
+    var row = table.insertRow(-1);
+    var cell1 = row.insertCell(0);
+    var cell2 = row.insertCell(1);
+    var cell3 = row.insertCell(2);
+    var cell4 = row.insertCell(3);
+    cell1.innerHTML = "<input type='text' id='dName' value=''/>";
+    cell2.innerHTML = "<input type='number' min='0' id='dwatt' value=''/>";
+    cell3.innerHTML = "<input type='number' min='0' id='dhour' value=''  />";
+    cell4.innerHTML = "<input type='number' min='0' id='dWh' value='' disabled='' />";
+  }
+
+  function deleteTableRow() {
+    document.getElementById("tblDay").deleteRow(-1);
+    
+  }
+
+  var totWh = document.getElementById("DayTotalWhOut")
+  function getDeviceWh() {
+    var table = document.getElementById("tblDay").rows.length
+    var wattage = document.querySelectorAll("#dwatt");
+    var hours = document.querySelectorAll("#dhour");
+    var deviceWhour = document.querySelectorAll("#dWh");
+    let totalWh = 0
+    
+    for (var i = 0; i< table-1; i++) {
+      //console.log(parseInt(table.rows[i].cells[2].innerHTML));
+      let deviceWattage = wattage[i].value;
+      let deviceHours = hours[i].value;
+      let deviceWh = deviceWattage*deviceHours;
+      deviceWhour[i].value = deviceWh;
+      totalWh = totalWh + deviceWh;
+      
+    }
+    totWh.value = totalWh;
+  }
+  var systemVolatage = document.getElementById("voltage");
+  var daysOfAutonomy = document.getElementById("daysOfAuto");
+  var degreeOfDischarge = document.getElementById("degOfDischarge");
+  var avgEfficiency = document.getElementById("efficiency");
+  var batteryCapacity = document.getElementById("batCapacity");
+  var avgSunHours = document.getElementById("sunHours");
+  var PanelCapacity = document.getElementById("solorpanelcap");
+  
+  
+  function calBatteryCap() {
+    batteryCapacity.value = Math.round(totWh.value * daysOfAutonomy.value * 10000 / systemVolatage.value / degreeOfDischarge.value / avgEfficiency.value);
+  }
+
+  function calPanelCap() {
+    PanelCapacity.value = Math.round(totWh.value * daysOfAutonomy.value * 100 / avgEfficiency.value / avgSunHours.value);
+  }
+
+</script>
+{% endblock %}

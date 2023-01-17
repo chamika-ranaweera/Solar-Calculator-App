@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% block title %}
+<title>Solar Insolation</title>
+{% endblock %}
+{% block links %}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+  integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+  integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+  integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+  integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <h2><strong>Solar Resource Maps and Data</h2>
+  <p>Find and download solar resource map images and geospatial data for the United States.This data provides monthly
+    average and annual average daily total solar resource averaged over surface cells of 0.1 degrees in both latitude
+    and longitude, or about 10 km in size.</strong></p>
+
+  <h3><strong>Enter Your Address</strong></h3>
+
+  <form method="POST">
+    <div class="form-group">
+      <label for="formGroupExampleInput">Address One</label>
+      <input type="text" class="form-control" name="AddressOne" placeholder="Street, Rout or Village">
+    </div>
+    <div class="form-group">
+      <label for="formGroupExampleInput2">Address Two</label>
+      <input type="text" class="form-control" name="AddressTwo" placeholder="City, State">
+    </div>
+    <div class="form-group">
+      <label for="formGroupExampleInput2">Country</label>
+      <input type="text" class="form-control" name="Country" placeholder="Country">
+    </div>
+
+    {{ Location_Form.submit(class="btn btn-primary btn-lg btn-block") }}
+  </form>
+  <br>
+  {% if EnteredAddress %}
+  <div class="card">
+    <div class="card-header">
+      <strong> Yearly Solar Insolation</strong>
+    </div>
+    <div class="card-body">
+      <h5 class="card-title">Approximated Location - <strong>{{ EnteredAddress[0] }}</strong></h5>
+      {% if Insolation %}
+      <p class="card-text">Average Direct Normal Irradiance: {{ Insolation[0] }} kWh/m<sup>2</sup>/day</p>
+      <p class="card-text">Average Global Horizontal Irradiance: {{ Insolation[1] }} kWh/m<sup>2</sup>/day</p>
+      <p class="card-text">Average Tilt at Latitude: {{ Insolation[2] }} kWh/m<sup>2</sup>/day</p>
+      <a href="{{ url_for('solar_calculator_page') }}" class="btn btn-primary">Design Your System</a>
+      
+      {% endif %}
+    </div>
+  </div>
+  <br>
+  {% endif %}
+
+
+</div>
+
+{% endblock %}
