@@ -2,3 +2,6 @@
 /Lib
 /scripts
 pyvenv.cfg
+/project/solar/__pycache__
+/project/solar/keys.py
+

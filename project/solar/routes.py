@@ -2,6 +2,7 @@ from flask import render_template, redirect, url_for, request
 import requests
 from solar import app
 from solar.forms import Location_Form
+from solar.keys import GeoCoding_API_Key,Solar_API_Key
 
 
 @app.route('/')
@@ -26,8 +27,6 @@ def solar_insolation_page():
     Location_form = Location_Form()
     if request.method == "POST":
         baseURLGeoCoding = "https://maps.googleapis.com/maps/api/geocode/json?address="
-        GeoCoding_API_Key = "Enter the API KEY"
-        Solar_API_Key = "Enter the API Key"
         baseURLSolar = "https://developer.nrel.gov/api/solar/solar_resource/v1.json?api_key="
         
         AddressLineOne = request.form.get('AddressOne')
