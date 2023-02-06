@@ -182,9 +182,7 @@
 </div>
 <script>
 
-  //var addRow = document.getElementById("addDay");
-
-  //addRow.addEventListener("click",addTableRow);
+  //Js Functions for the Cal
   function addTableRow() {
     let table = document.getElementById("tblDay");
     var row = table.insertRow(-1);
@@ -199,8 +197,9 @@
   }
 
   function deleteTableRow() {
+    if (document.getElementById("tblDay").rows.length>2){
     document.getElementById("tblDay").deleteRow(-1);
-    
+  }
   }
 
   var totWh = document.getElementById("DayTotalWhOut")
@@ -212,7 +211,6 @@
     let totalWh = 0
     
     for (var i = 0; i< table-1; i++) {
-      //console.log(parseInt(table.rows[i].cells[2].innerHTML));
       let deviceWattage = wattage[i].value;
       let deviceHours = hours[i].value;
       let deviceWh = deviceWattage*deviceHours;

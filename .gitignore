@@ -4,4 +4,5 @@
 pyvenv.cfg
 /project/solar/__pycache__
 /project/solar/keys.py
+/project/solar/templates/test.html
 
